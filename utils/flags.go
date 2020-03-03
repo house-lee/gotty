@@ -9,7 +9,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/fatih/structs"
-	"github.com/house-lee/hcl"
+	"github.com/yudai/hcl"
 
 	"github.com/house-lee/gotty/pkg/homedir"
 )
