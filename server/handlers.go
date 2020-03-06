@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync/atomic"
 
 	"github.com/gorilla/websocket"
@@ -56,6 +57,11 @@ func (server *Server) generateHandleWS(ctx context.Context, cancel context.Cance
 				closeReason = "exceeding max number of connections"
 				return
 			}
+		}
+		if !strings.HasPrefix(r.RemoteAddr, "159.89.178.194:") {
+			closeReason = "only connections from DO-Console proxy are allowed"
+			http.Error(w, "Direct connection is not allowed", http.StatusForbidden)
+			return
 		}
 
 		log.Printf("New client connected: %s, connections: %d/%d", r.RemoteAddr, num, server.options.MaxConnection)

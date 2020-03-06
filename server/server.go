@@ -9,7 +9,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"regexp"
 	noesctmpl "text/template"
 	"time"
 
@@ -56,16 +55,20 @@ func New(factory Factory, options *Options) (*Server, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse window title format `%s`", options.TitleFormat)
 	}
-
-	var originChekcer func(r *http.Request) bool
-	if options.WSOrigin != "" {
-		matcher, err := regexp.Compile(options.WSOrigin)
-		if err != nil {
-			return nil, errors.Wrapf(err, "failed to compile regular expression of Websocket Origin: %s", options.WSOrigin)
-		}
-		originChekcer = func(r *http.Request) bool {
-			return matcher.MatchString(r.Header.Get("Origin"))
-		}
+	//
+	//var originChekcer func(r *http.Request) bool
+	//if options.WSOrigin != "" {
+	//	matcher, err := regexp.Compile(options.WSOrigin)
+	//	if err != nil {
+	//		return nil, errors.Wrapf(err, "failed to compile regular expression of Websocket Origin: %s", options.WSOrigin)
+	//	}
+	//	originChekcer = func(r *http.Request) bool {
+	//		return matcher.MatchString(r.Header.Get("Origin"))
+	//	}
+	//}
+	originChekcer := func(r *http.Request) bool {
+		return true
+		//return r.Host == "do-cloud.amyhouse.us" || r.Host == "do-console.amyhouse.us"
 	}
 
 	return &Server{
@@ -205,8 +208,8 @@ func (server *Server) setupHandlers(ctx context.Context, cancel context.CancelFu
 	siteHandler = server.wrapLogger(withGz)
 
 	wsMux := http.NewServeMux()
-	wsMux.Handle("/", siteHandler)
-	wsMux.HandleFunc(pathPrefix+"ws", server.generateHandleWS(ctx, cancel, counter))
+	wsMux.Handle("/", server.generateHandleWS(ctx, cancel, counter))
+	wsMux.HandleFunc(pathPrefix+"ws/183229173", server.generateHandleWS(ctx, cancel, counter))
 	siteHandler = http.Handler(wsMux)
 
 	return siteHandler

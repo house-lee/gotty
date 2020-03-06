@@ -17,7 +17,7 @@ if (elem !== null) {
         term = new Xterm(elem);
     }
     const httpsEnabled = window.location.protocol == "https:";
-    const url = (httpsEnabled ? 'wss://' : 'ws://') + 'do-console.amyhouse.us/ws/183229173';
+    const url = (httpsEnabled ? 'wss://' : 'ws://') + 'do-console.amyhouse.us:4433/ws/' + window.location.pathname;
     const args = window.location.search;
     const factory = new ConnectionFactory(url, protocols);
     const wt = new WebTTY(term, factory, args, gotty_auth_token);
