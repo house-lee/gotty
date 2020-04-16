@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/NYTimes/gziphandler"
-	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 
@@ -184,18 +183,18 @@ func (server *Server) Run(ctx context.Context, options ...RunOption) error {
 }
 
 func (server *Server) setupHandlers(ctx context.Context, cancel context.CancelFunc, pathPrefix string, counter *counter) http.Handler {
-	staticFileHandler := http.FileServer(
-		&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"},
-	)
+	//staticFileHandler := http.FileServer(
+	//	&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"},
+	//)
 
 	var siteMux = http.NewServeMux()
-	siteMux.HandleFunc(pathPrefix, server.handleIndex)
-	siteMux.Handle(pathPrefix+"js/", http.StripPrefix(pathPrefix, staticFileHandler))
-	siteMux.Handle(pathPrefix+"favicon.png", http.StripPrefix(pathPrefix, staticFileHandler))
-	siteMux.Handle(pathPrefix+"css/", http.StripPrefix(pathPrefix, staticFileHandler))
-
-	siteMux.HandleFunc(pathPrefix+"auth_token.js", server.handleAuthToken)
-	siteMux.HandleFunc(pathPrefix+"config.js", server.handleConfig)
+	//siteMux.HandleFunc(pathPrefix, server.handleIndex)
+	//siteMux.Handle(pathPrefix+"js/", http.StripPrefix(pathPrefix, staticFileHandler))
+	//siteMux.Handle(pathPrefix+"favicon.png", http.StripPrefix(pathPrefix, staticFileHandler))
+	//siteMux.Handle(pathPrefix+"css/", http.StripPrefix(pathPrefix, staticFileHandler))
+	//
+	//siteMux.HandleFunc(pathPrefix+"auth_token.js", server.handleAuthToken)
+	//siteMux.HandleFunc(pathPrefix+"config.js", server.handleConfig)
 
 	siteHandler := http.Handler(siteMux)
 
